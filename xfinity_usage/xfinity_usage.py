@@ -58,7 +58,8 @@ try:
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.common.desired_capabilities import \
         DesiredCapabilities
-    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.chrome.options import Options as ChromeOptions
+    from selenium.webdriver.firefox.options import Options as FirefoxOptions
     from selenium.webdriver.common.by import By
     from selenium.webdriver.support import expected_conditions as EC
 except ImportError:
@@ -393,12 +394,17 @@ class XfinityUsage(object):
                 logger.debug("exporting DISPLAY=:0")
                 os.environ['DISPLAY'] = ":0"
             browser = webdriver.Firefox()
+        elif self.browser_name == 'firefox-headless':
+            logger.debug("getting Firefox browser (local) with --headless")
+            firefox_options = FirefoxOptions()
+            firefox_options.add_argument("--headless")
+            browser = webdriver.Firefox(firefox_options=firefox_options)
         elif self.browser_name == 'chrome':
             logger.debug("getting Chrome browser (local)")
             browser = webdriver.Chrome()
         elif self.browser_name == 'chrome-headless':
             logger.debug('getting Chrome browser (local) with --headless')
-            chrome_options = Options()
+            chrome_options = ChromeOptions()
             chrome_options.add_argument("--headless")
             browser = webdriver.Chrome(chrome_options=chrome_options)
         elif self.browser_name == 'phantomjs':
@@ -416,7 +422,8 @@ class XfinityUsage(object):
         else:
             raise SystemExit(
                 "ERROR: browser type must be one of 'firefox', 'chrome', "
-                "'phantomjs', or 'chrome-headless' not '{b}'".format(
+                "'phantomjs', 'firefox-headless', or 'chrome-headless' " 
+                " not '{b}'".format(
                     b=self.browser_name
                 )
             )
@@ -594,7 +601,7 @@ def parse_args(argv):
                    type=str,
                    default=os.path.realpath('xfinity_usage_cookies.json'),
                    help='File to save cookies in')
-    browsers = ['phantomjs', 'firefox', 'chrome', 'chrome-headless']
+    browsers = ['phantomjs', 'firefox', 'firefox-headless', 'chrome', 'chrome-headless']
     p.add_argument('-b', '--browser', dest='browser_name', type=str,
                    default='phantomjs', choices=browsers,
                    help='Browser name/type to use')
