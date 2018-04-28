@@ -18,5 +18,4 @@ WORKDIR /root
 RUN rm -rf /usr/src/app
 COPY /docker/run.sh /root/run.sh
 
-ENV INTERVAL=300
 CMD /root/run.sh

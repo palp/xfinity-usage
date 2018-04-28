@@ -10,6 +10,11 @@ if [ ! -z "$GRAPHITE_PREFIX" ] ; then
     cmd_args="$cmd_args -P $GRAPHITE_PREFIX"
 fi
 
+if [ -z "$INTERVAL" ] ; then
+    xfinity-usage $cmd_args
+    exit 0;
+fi
+
 while true
 do xfinity-usage $cmd_args
 sleep $INTERVAL
