@@ -1,4 +1,9 @@
 #!/bin/sh
+if [ -f /run/secrets/xfinity.env ] ; then
+    source /run/secrets/xfinity.env
+    export XFINITY_USER XFINITY_PASSWORD
+fi
+
 cmd_args="-vvb firefox-headless -g"
 if [ ! -z "$GRAPHITE_HOST" ] ; then
     cmd_args="$cmd_args -H $GRAPHITE_HOST"
